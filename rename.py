@@ -12,9 +12,13 @@ def renameImage(imagename):
     exifdata = image.getexif()
     # iterating over all EXIF data fields
     for tag_id in exifdata:
+        print (TAGS.get(tag_id, tag_id) + "=" + str(exifdata.get(tag_id)) + " | ")
+    found = False
+    for tag_id in exifdata:
      # get the tag name, instead of human unreadable tag id
         tag = TAGS.get(tag_id, tag_id)
-        if tag == "DateTimeOriginal":
+        if (tag == "DateTimeOriginal") or (tag == "DateTime"):
+            found = True
             data = exifdata.get(tag_id)
             sList = data.split()
             data = sList[0] + "_" + sList[1]
@@ -26,9 +30,10 @@ def renameImage(imagename):
             try:
                 os.rename(imagename, newFileName)
             except IOError as e:
-                print ("error: " + e.errno + " " + e)
-        else:
-            print("Image time not found: " + imagename)
+                print ("error: " + str(e.errno) + " " + str(e))
+    if not found:
+        print("Image time not found: " + imagename)
+
                 
         
 
